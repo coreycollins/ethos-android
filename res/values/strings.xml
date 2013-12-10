@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, ParseStarterProjectActivity!</string>
+    <string name="app_name">Ethos</string>
+    <string name="app_id">595212907211045</string>
+    <string name="exception">Exception: %1$s</string>
+    <string name="ok_button">OK</string>
+</resources>
