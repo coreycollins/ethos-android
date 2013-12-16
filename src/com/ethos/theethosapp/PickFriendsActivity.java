@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
+
+import com.ethos.theethosapp.R;
 import com.facebook.FacebookException;
 import com.facebook.widget.FriendPickerFragment;
 import com.facebook.widget.PickerFragment;

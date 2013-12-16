@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.ethos.theethosapp.R;
 import com.facebook.AppEventsLogger;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -164,27 +165,29 @@ public class Search extends FragmentActivity implements OnClickListener{
 		ParseApplication app = (ParseApplication) getApplication();
 		switch(v.getId()){
 			case R.id.angelPost:
-				ParseObject angelPost = new ParseObject("Comments");
-				angelPost.put("isAngel", 1);
+				ParseObject angelPost = new ParseObject("Comment");
+				angelPost.put("message", comment);
 				angelPost.put("fromUser", app.getCurrentUserFBId());
 				angelPost.put("toUser", recieverFBId);
-				angelPost.put("comment", comment);
-				angelPost.put("isLocked", true);
+				angelPost.put("isAngel", true);
+				angelPost.put("isHidden", true);
 				//TODO:: update whether or not the comment is locked
-				angelPost.put("lockedForever", false);
-				angelPost.saveInBackground();	
+				angelPost.put("isLocked", false);
+				angelPost.put("isSpam", false);
+				angelPost.saveEventually();	
 				finish();
 			break;
 			case R.id.devilPost:
-				ParseObject devilPost = new ParseObject("Comments");
-				devilPost.put("isAngel", 0);
+				ParseObject devilPost = new ParseObject("Comment");
+				devilPost.put("message", comment);
 				devilPost.put("fromUser", app.getCurrentUserFBId());
 				devilPost.put("toUser", recieverFBId);
-				devilPost.put("comment", comment);
-				devilPost.put("isLocked", true);
+				devilPost.put("isAngel", false);
+				devilPost.put("isHidden", true);
 				//TODO:: update whether or not the comment is locked
-				devilPost.put("lockedForever", false);
-				devilPost.saveInBackground();
+				devilPost.put("isLocked", false);
+				devilPost.put("isSpam", false);
+				devilPost.saveEventually();	
 				finish();
 				break;
 		}

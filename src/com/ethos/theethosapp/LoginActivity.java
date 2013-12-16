@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 
+import com.ethos.theethosapp.R;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -75,20 +76,7 @@ public class LoginActivity extends Activity {
 		    } else {
 		      Log.d("MyApp", "User logged in through Facebook!");
 		      
-		      Parse.Cloud.beforeSave(Parse.User, function(request, response) {
-
-		    	  var newACL = new Parse.ACL();
-		    	  newACL.setRoleWriteAccess("Administrator", true);
-		    	  request.object.setACL(newACL);
-		    	  response.success();  
-		    	  });
-		      
-		      
 		      makeMeRequest(ParseFacebookUtils.getSession());
-		      
-		      Intent intent = new Intent(LoginActivity.this, HomeScreen.class);
-		      startActivity(intent);
-		      finish();
 		    }
 		  }
 		});
@@ -100,13 +88,19 @@ public class LoginActivity extends Activity {
 
 	        @Override
 	        public void onCompleted(GraphUser user, Response response) {
+	        	Log.d("test", "test");
+	        	Log.d("user", user.toString());
+	        	Log.d("Response", response.toString());
 	            // If the response is successful
 	            if (session == Session.getActiveSession()) {
 	                if (user != null) {
 	                    String facebookId = user.getId();
 	                    ParseApplication app = (ParseApplication) getApplication();
 	                    app.setCurrentUserFBId(facebookId);
-	                }
+	                    Intent intent = new Intent(LoginActivity.this, HomeScreen.class);
+	      		      startActivity(intent);
+	      		      finish();
+	                } 
 	            }
 	            if (response.getError() != null) {
 	                // Handle error
