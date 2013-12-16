@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="7dip"
+    android:paddingBottom="7dip"
+    android:orientation="horizontal"
+    android:gravity="center">
+    
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/navbar_background"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/btnAll"
+            style="@style/navbar_button"
+            android:text="600" />
+
+        <RadioButton
+            android:id="@+id/btnPicture"
+            style="@style/navbar_button"
+            android:layout_marginLeft="5dp" />
+
+        <RadioButton
+            android:id="@+id/btnFile"
+            style="@style/navbar_button"
+            android:drawableLeft="@drawable/navbar_fileselector"
+            android:text="50" />
+    </RadioGroup>
+</LinearLayout>
