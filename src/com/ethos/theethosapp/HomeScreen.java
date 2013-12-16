@@ -54,7 +54,7 @@ public class HomeScreen extends Activity {
 		 Log.d("userid", app.getCurrentUserFBId());
 		 ParseQuery<ParseObject> query = ParseQuery.getQuery("Comment");
 		 query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
-		 
+		 query.orderByDescending("createdAt");
 		 query.whereEqualTo("fromUser", app.getCurrentUserFBId());
 		 query.findInBackground(new FindCallback<ParseObject>() {
 			    public void done(List<ParseObject> scoreList, ParseException e) {
@@ -89,34 +89,63 @@ public class HomeScreen extends Activity {
 			});
 		}
 	
-	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+	private class GetDataTask extends AsyncTask<Comment, Void, String[]> {
 	    
 	    @Override
 	    protected void onPostExecute(String[] result) {
-	    	Comment comment = new Comment(
-        			"test", 
-        			"test",
-        			new Date(),
-        			new Date(),
-        			"test",
-        			"test",
-        			false,
-        			false,
-        			true,
-        			false,
-        			"test",
-        			"test"
-        			);
-	        fetch.add(0, comment);
 	        // Call onRefreshComplete when the list has been refreshed.
+	    	if("cool".equals(result[0]))
 	        ((PullToRefreshListView) lv).onRefreshComplete();
+	    	adapter.notifyDataSetChanged();
 	        super.onPostExecute(result);
 	    }
 
 		@Override
-		protected String[] doInBackground(Void... arg0) {
+		protected String[] doInBackground(Comment... arg0) {
 			// TODO Auto-generated method stub
-			return null;
+			
+			
+			Date latestDate = fetch.get(0).getDateCreated();
+			ParseQuery<ParseObject> query = ParseQuery.getQuery("Comment");
+			 query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+			 query.whereEqualTo("fromUser", app.getCurrentUserFBId());
+			 query.whereGreaterThan("createdAt", latestDate);
+			 query.findInBackground(new FindCallback<ParseObject>() {
+				    public void done(List<ParseObject> scoreList, ParseException e) {
+				        if (e == null) {
+				            Log.d("score", "Retrieved " + scoreList.size() + " scores");
+				            for (int i = 0; i < scoreList.size(); i++){
+				            	Log.d("date object", "a" + scoreList.get(i).getDate("dateCreated"));
+				            	Log.d("date formatted", String.valueOf(scoreList.get(i).getDate("dateCreated")));
+				            	
+				            	Comment comment = new Comment(
+				            			scoreList.get(i).getObjectId(), 
+				            			scoreList.get(i).getString("message"),
+				            			scoreList.get(i).getCreatedAt(),
+				            			scoreList.get(i).getUpdatedAt(),
+				            			scoreList.get(i).getString("fromUser"),
+				            			scoreList.get(i).getString("toUser"),
+				            			scoreList.get(i).getBoolean("isHidden"),
+				            			scoreList.get(i).getBoolean("isLocked"),
+				            			scoreList.get(i).getBoolean("isAngel"),
+				            			scoreList.get(i).getBoolean("isSpam"),
+				            			scoreList.get(i).getString("fromUserName"),
+				            			scoreList.get(i).getString("toName")
+				            			);
+				            	fetch.add(0, comment);
+				            	
+				            }
+				        } else {
+				            Log.d("score", "Error: " + e.getMessage());
+				        }
+				    }
+				});
+			 try {
+	                Thread.sleep(2000);
+	            } catch (InterruptedException e) {
+	                ;
+	            }
+			return new String[] {"cool"};
 		}
 	}
 
