@@ -1,15 +1,18 @@
 package com.ethos.theethosapp;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ListView;
 
+import com.markupartist.android.widget.PullToRefreshListView;
+import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -30,6 +33,16 @@ public class HomeScreen extends Activity {
 		Log.d("userid", "a"+app.getCurrentUserFBId());
 		initList();
         lv = (ListView) findViewById(R.id.listview);
+        
+     // Set a listener to be invoked when the list should be refreshed.
+        ((PullToRefreshListView) lv).setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Do work to refresh the list here.
+                new GetDataTask().execute();
+            }
+        });
+        
         adapter = new CustomAdapter(HomeScreen.this,
                 R.id.listview,
                 fetch);
@@ -75,6 +88,37 @@ public class HomeScreen extends Activity {
 			    }
 			});
 		}
+	
+	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+	    
+	    @Override
+	    protected void onPostExecute(String[] result) {
+	    	Comment comment = new Comment(
+        			"test", 
+        			"test",
+        			new Date(),
+        			new Date(),
+        			"test",
+        			"test",
+        			false,
+        			false,
+        			true,
+        			false,
+        			"test",
+        			"test"
+        			);
+	        fetch.add(0, comment);
+	        // Call onRefreshComplete when the list has been refreshed.
+	        ((PullToRefreshListView) lv).onRefreshComplete();
+	        super.onPostExecute(result);
+	    }
+
+		@Override
+		protected String[] doInBackground(Void... arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	}
 
 	public void openSearchActivity() {
 		Intent intent = new Intent(HomeScreen.this, Search.class);
